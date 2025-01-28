@@ -39,55 +39,15 @@ public class GameManager
             }
             else if (input.StartsWith("go"))
             {
-                string[] parts = input.Split(' ');
-                if (parts.Length > 1)
-                {
-                    string direction = parts[1];
-                    if (World.MovePlayer(Player, direction))
-                    {
-                        Console.WriteLine($"You move {direction}.");
-                    }
-                    else
-                    {
-                        ClarifyPlayerCommand(Commands.Move);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Move where? (north, south, east, west)");
-                }
+                ExecuteMoveCommand(input);
             }
             else if (input.StartsWith("take"))
             {
-                string[] parts = input.Split(' ');
-                if (parts.Length > 1)
-                {
-                    string itemName = parts[1];
-                    if (!World.TakeItem(Player, itemName))
-                    {
-                        Console.WriteLine($"There is no {itemName} here.");
-                    }
-                }
-                else
-                {
-                    ClarifyPlayerCommand(Commands.Take);
-                }
+                ExecuteTakeCommand(input);
             }
             else if (input.StartsWith("use"))
             {
-                string[] parts = input.Split(' ');
-                if (parts.Length > 1)
-                {
-                    string itemName = parts[1];
-                    if (!World.UseItem(Player, itemName))
-                    {
-                        Console.WriteLine($"You can't use the {itemName} here.");
-                    }
-                }
-                else
-                {
-                    ClarifyPlayerCommand(Commands.Use);
-                }
+                ExecuteUseCommand(input);
             }
             else if (input == "inventory")
             {
@@ -95,23 +55,7 @@ public class GameManager
             }
             else if (input.StartsWith("solve"))
             {
-                string[] parts = input.Split(' ');
-                if (parts.Length > 1)
-                {
-                    string puzzleName = parts[1];
-                    if (World.SolvePuzzle(Player, puzzleName))
-                    {
-                        Console.WriteLine($"You solved the {puzzleName} puzzle!");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"That's not the right solution for the {puzzleName} puzzle.");
-                    }
-                }
-                else
-                {
-                    ClarifyPlayerCommand(Commands.Solve);
-                }
+                ExecuteSolveCommand(input);
             }
             else if (input == "quit")
             {
@@ -122,6 +66,82 @@ public class GameManager
             {
                 ClarifyPlayerCommand(Commands.Unknown);
             }
+        }
+    }
+
+    private void ExecuteMoveCommand(string input)
+    {
+        string[] parts = input.Split(' ');
+        if (parts.Length > 1)
+        {
+            string direction = parts[1];
+            if (World.MovePlayer(Player, direction))
+            {
+                Console.WriteLine($"You move {direction}.");
+            }
+            else
+            {
+                ClarifyPlayerCommand(Commands.Move);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Move where? (north, south, east, west)");
+        }
+    }
+
+    private void ExecuteTakeCommand(string input)
+    {
+        string[] parts = input.Split(' ');
+        if (parts.Length > 1)
+        {
+            string itemName = parts[1];
+            if (!World.TakeItem(Player, itemName))
+            {
+                Console.WriteLine($"There is no {itemName} here.");
+            }
+        }
+        else
+        {
+            ClarifyPlayerCommand(Commands.Take);
+        }
+    }
+
+    private void ExecuteUseCommand(string input)
+    {
+        string[] parts = input.Split(' ');
+        if (parts.Length > 1)
+        {
+            string itemName = parts[1];
+            if (!World.UseItem(Player, itemName))
+            {
+                Console.WriteLine($"You can't use the {itemName} here.");
+            }
+        }
+        else
+        {
+            ClarifyPlayerCommand(Commands.Use);
+        }
+    }
+
+    private void ExecuteSolveCommand(string input)
+    {
+        string[] parts = input.Split(' ');
+        if (parts.Length > 1)
+        {
+            string puzzleName = parts[1];
+            if (World.SolvePuzzle(Player, puzzleName))
+            {
+                Console.WriteLine($"You solved the {puzzleName} puzzle!");
+            }
+            else
+            {
+                Console.WriteLine($"That's not the right solution for the {puzzleName} puzzle.");
+            }
+        }
+        else
+        {
+            ClarifyPlayerCommand(Commands.Solve);
         }
     }
 
