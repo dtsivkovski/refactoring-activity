@@ -5,6 +5,15 @@ public class GameManager
     public bool IsRunning;
     public Player Player;
     public World World;
+    
+    private enum Commands
+    {
+        Move,
+        Take,
+        Use,
+        Solve,
+        Unknown,
+    }
 
     public void RunGame()
     {
@@ -40,7 +49,7 @@ public class GameManager
                     }
                     else
                     {
-                        Console.WriteLine("You can't go that way.");
+                        ClarifyPlayerCommand(Commands.Move);
                     }
                 }
                 else
@@ -61,7 +70,7 @@ public class GameManager
                 }
                 else
                 {
-                    Console.WriteLine("Take what?");
+                    ClarifyPlayerCommand(Commands.Take);
                 }
             }
             else if (input.StartsWith("use"))
@@ -77,7 +86,7 @@ public class GameManager
                 }
                 else
                 {
-                    Console.WriteLine("Use what?");
+                    ClarifyPlayerCommand(Commands.Use);
                 }
             }
             else if (input == "inventory")
@@ -101,7 +110,7 @@ public class GameManager
                 }
                 else
                 {
-                    Console.WriteLine("Solve what?");
+                    ClarifyPlayerCommand(Commands.Solve);
                 }
             }
             else if (input == "quit")
@@ -111,7 +120,7 @@ public class GameManager
             }
             else
             {
-                Console.WriteLine("Unknown command. Try 'help'.");
+                ClarifyPlayerCommand(Commands.Unknown);
             }
         }
     }
@@ -125,5 +134,29 @@ public class GameManager
         Console.WriteLine("- solve [puzzle]: Solve a puzzle in your current location.");
         Console.WriteLine("- inventory: View the items in your inventory.");
         Console.WriteLine("- quit: Exit the game.");
+    }
+
+    private static void ClarifyPlayerCommand(Commands commandType)
+    {
+        if (commandType == Commands.Move)
+        {
+            Console.WriteLine("Move where? (north, south, east, west)");
+        }
+        else if (commandType == Commands.Take)
+        {
+            Console.WriteLine("Take what?");
+        }
+        else if (commandType == Commands.Use)
+        {
+            Console.WriteLine("Use what?");
+        }
+        else if (commandType == Commands.Solve)
+        {
+            Console.WriteLine("Solve what?");
+        }
+        else if (commandType == Commands.Unknown)
+        {
+            Console.WriteLine("Unknown command. Try 'help'.");
+        }
     }
 }
