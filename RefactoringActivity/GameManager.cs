@@ -26,13 +26,7 @@ public class GameManager
 
             if (input == "help")
             {
-                Console.WriteLine("Available commands:");
-                Console.WriteLine("- go [direction]: Move in a direction (north, south, east, west).");
-                Console.WriteLine("- take [item]: Take an item from your current location.");
-                Console.WriteLine("- use [item]: Use an item in your inventory.");
-                Console.WriteLine("- solve [puzzle]: Solve a puzzle in your current location.");
-                Console.WriteLine("- inventory: View the items in your inventory.");
-                Console.WriteLine("- quit: Exit the game.");
+                PrintAvailableCommands();
             }
             else if (input.StartsWith("go"))
             {
@@ -120,5 +114,16 @@ public class GameManager
                 Console.WriteLine("Unknown command. Try 'help'.");
             }
         }
+    }
+
+    private static void PrintAvailableCommands()
+    {
+        Console.WriteLine("Available commands:");
+        Console.WriteLine("- go [direction]: Move in a direction (north, south, east, west).");
+        Console.WriteLine("- take [item]: Take an item from your current location.");
+        Console.WriteLine("- use [item]: Use an item in your inventory.");
+        Console.WriteLine("- solve [puzzle]: Solve a puzzle in your current location.");
+        Console.WriteLine("- inventory: View the items in your inventory.");
+        Console.WriteLine("- quit: Exit the game.");
     }
 }
