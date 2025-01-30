@@ -60,29 +60,52 @@ public class World
         Location location = Locations[locationName];
         string details = location.Description;
         
-        if (location.Exits.Count > 0)
-        {
-            details += " Exits lead: ";
-            foreach (string exit in location.Exits.Keys)
-                details += exit + ", ";
-            details = details.Substring(0, details.Length - 2);
-        }
+        details += GetLocationExits(location);
+        details += GetLocationItems(location);
 
-        if (location.Items.Count > 0)
-        {
-            details += "\nYou see the following items:";
-            foreach (string item in location.Items) 
-                details += $"\n- {item}";
-        }
-
-        if (location.Puzzles.Count > 0)
-        {
-            details += "\nYou see the following puzzles:";
-            foreach (Puzzle puzzle in location.Puzzles) 
-                details += $"\n- {puzzle.Name}";
-        }
+        details += GetLocationPuzzles(location);
 
         return details;
+    }
+
+    private static string GetLocationPuzzles(Location location)
+    {
+        String puzzles = "";
+        if (location.Puzzles.Count > 0)
+        {
+            puzzles += "\nYou see the following puzzles:";
+            foreach (Puzzle puzzle in location.Puzzles) 
+                puzzles += $"\n- {puzzle.Name}";
+        }
+
+        return puzzles;
+    }
+
+    private static string GetLocationItems(Location location)
+    {
+        String items = "";
+        if (location.Items.Count > 0)
+        {
+            items += "\nYou see the following items:";
+            foreach (string item in location.Items) 
+                items += $"\n- {item}";
+        }
+
+        return items;
+    }
+
+    private static string GetLocationExits(Location location)
+    {
+        String exits = "";
+        if (location.Exits.Count > 0)
+        {
+            exits += " Exits lead: ";
+            foreach (string exit in location.Exits.Keys)
+                exits += exit + ", ";
+            exits = exits.Substring(0, exits.Length - 2);
+        }
+
+        return exits;
     }
 
     public bool TakeItem(Player player, string itemName)
@@ -105,9 +128,7 @@ public class World
         {
             if (itemName == "potion")
             {
-                Console.WriteLine("Ouch! That tasted like poison!");
-                player.Health -= 10;
-                Console.WriteLine($"Your health is now {player.Health}.");
+                UsePotion(player);
             }
             else
             {
@@ -118,6 +139,13 @@ public class World
         }
 
         return false;
+    }
+
+    private static void UsePotion(Player player)
+    {
+        Console.WriteLine("Ouch! That tasted like poison!");
+        player.Health -= 10;
+        Console.WriteLine($"Your health is now {player.Health}.");
     }
 
     public bool SolvePuzzle(Player player, string puzzleName)
