@@ -12,26 +12,13 @@ public class World
 
     private void InitializeWorld()
     {
-        Location start = new("Start", "You are at the starting point of your adventure.");
-        Location forest = new("Forest", "You are in a dense, dark forest.");
-        Location cave = new("Cave", "You see a dark, ominous cave.");
+        Location start = Location.NewDefaultLocation(Location.DefaultLocations.Start);
+        Location forest = Location.NewDefaultLocation(Location.DefaultLocations.Forest);
+        Location cave = Location.NewDefaultLocation(Location.DefaultLocations.Cave);
 
-        start.Exits.Add("north", "Forest");
-        forest.Exits.Add("south", "Start");
-        forest.Exits.Add("east", "Cave");
-        cave.Exits.Add("west", "Forest");
-
-        start.Items.Add("map");
-        forest.Items.Add("key");
-        forest.Items.Add("potion");
-        cave.Items.Add("sword");
-
-        start.Puzzles.Add(new Puzzle("riddle",
-            "What's tall as a house, round as a cup, and all the king's horses can't draw it up?", "well"));
-
-        Locations.Add("Start", start);
-        Locations.Add("Forest", forest);
-        Locations.Add("Cave", cave);
+        Locations.Add(start.Name, start);
+        Locations.Add(forest.Name, forest);
+        Locations.Add(cave.Name, cave);
     }
 
     public bool MovePlayer(Player player, string direction)
