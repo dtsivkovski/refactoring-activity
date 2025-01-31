@@ -12,31 +12,18 @@ public class World
 
     private void InitializeWorld()
     {
-        Location start = new("Start", "You are at the starting point of your adventure.");
-        Location forest = new("Forest", "You are in a dense, dark forest.");
-        Location cave = new("Cave", "You see a dark, ominous cave.");
+        Location start = Location.NewDefaultLocation(Location.DefaultLocations.Start);
+        Location forest = Location.NewDefaultLocation(Location.DefaultLocations.Forest);
+        Location cave = Location.NewDefaultLocation(Location.DefaultLocations.Cave);
 
-        start.Exits.Add("north", "Forest");
-        forest.Exits.Add("south", "Start");
-        forest.Exits.Add("east", "Cave");
-        cave.Exits.Add("west", "Forest");
-
-        start.Items.Add("map");
-        forest.Items.Add("key");
-        forest.Items.Add("potion");
-        cave.Items.Add("sword");
-
-        start.Puzzles.Add(new Puzzle("riddle",
-            "What's tall as a house, round as a cup, and all the king's horses can't draw it up?", "well"));
-
-        Locations.Add("Start", start);
-        Locations.Add("Forest", forest);
-        Locations.Add("Cave", cave);
+        Locations.Add(start.Name, start);
+        Locations.Add(forest.Name, forest);
+        Locations.Add(cave.Name, cave);
     }
 
     public bool MovePlayer(Player player, string direction)
     {
-        if (Locations[player.CurrentLocation].Exits.ContainsKey(direction))
+        if (PlayerLocationContainsDirection(player, direction))
         {
             player.CurrentLocation = Locations[player.CurrentLocation].Exits[direction];
             return true;
@@ -45,44 +32,77 @@ public class World
         return false;
     }
 
+    private bool PlayerLocationContainsDirection(Player player, string direction)
+    {
+        return Locations[player.CurrentLocation].Exits.ContainsKey(direction);
+    }
+
     public string GetLocationDescription(string locationName)
     {
-        if (Locations.ContainsKey(locationName)) 
+        if (LocationExists(locationName)) 
             return Locations[locationName].Description;
         return "Unknown location.";
     }
 
+    private bool LocationExists(string locationName)
+    {
+        return Locations.ContainsKey(locationName);
+    }
+
     public string GetLocationDetails(string locationName)
     {
-        if (!Locations.ContainsKey(locationName)) 
+        if (!LocationExists(locationName)) 
             return "Unknown location.";
 
         Location location = Locations[locationName];
         string details = location.Description;
         
-        if (location.Exits.Count > 0)
-        {
-            details += " Exits lead: ";
-            foreach (string exit in location.Exits.Keys)
-                details += exit + ", ";
-            details = details.Substring(0, details.Length - 2);
-        }
+        details += GetLocationExits(location);
+        details += GetLocationItems(location);
 
-        if (location.Items.Count > 0)
-        {
-            details += "\nYou see the following items:";
-            foreach (string item in location.Items) 
-                details += $"\n- {item}";
-        }
-
-        if (location.Puzzles.Count > 0)
-        {
-            details += "\nYou see the following puzzles:";
-            foreach (Puzzle puzzle in location.Puzzles) 
-                details += $"\n- {puzzle.Name}";
-        }
+        details += GetLocationPuzzles(location);
 
         return details;
+    }
+
+    private static string GetLocationPuzzles(Location location)
+    {
+        String puzzles = "";
+        if (location.Puzzles.Count > 0)
+        {
+            puzzles += "\nYou see the following puzzles:";
+            foreach (Puzzle puzzle in location.Puzzles) 
+                puzzles += $"\n- {puzzle.Name}";
+        }
+
+        return puzzles;
+    }
+
+    private static string GetLocationItems(Location location)
+    {
+        String items = "";
+        if (location.Items.Count > 0)
+        {
+            items += "\nYou see the following items:";
+            foreach (string item in location.Items) 
+                items += $"\n- {item}";
+        }
+
+        return items;
+    }
+
+    private static string GetLocationExits(Location location)
+    {
+        String exits = "";
+        if (location.Exits.Count > 0)
+        {
+            exits += " Exits lead: ";
+            foreach (string exit in location.Exits.Keys)
+                exits += exit + ", ";
+            exits = exits.Substring(0, exits.Length - 2);
+        }
+
+        return exits;
     }
 
     public bool TakeItem(Player player, string itemName)
@@ -105,9 +125,7 @@ public class World
         {
             if (itemName == "potion")
             {
-                Console.WriteLine("Ouch! That tasted like poison!");
-                player.Health -= 10;
-                Console.WriteLine($"Your health is now {player.Health}.");
+                UsePotion(player);
             }
             else
             {
@@ -118,6 +136,13 @@ public class World
         }
 
         return false;
+    }
+
+    private static void UsePotion(Player player)
+    {
+        Console.WriteLine("Ouch! That tasted like poison!");
+        player.Health -= 10;
+        Console.WriteLine($"Your health is now {player.Health}.");
     }
 
     public bool SolvePuzzle(Player player, string puzzleName)
