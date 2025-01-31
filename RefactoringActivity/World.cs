@@ -23,7 +23,7 @@ public class World
 
     public bool MovePlayer(Player player, string direction)
     {
-        if (Locations[player.CurrentLocation].Exits.ContainsKey(direction))
+        if (PlayerLocationContainsDirection(player, direction))
         {
             player.CurrentLocation = Locations[player.CurrentLocation].Exits[direction];
             return true;
@@ -32,16 +32,26 @@ public class World
         return false;
     }
 
+    private bool PlayerLocationContainsDirection(Player player, string direction)
+    {
+        return Locations[player.CurrentLocation].Exits.ContainsKey(direction);
+    }
+
     public string GetLocationDescription(string locationName)
     {
-        if (Locations.ContainsKey(locationName)) 
+        if (LocationExists(locationName)) 
             return Locations[locationName].Description;
         return "Unknown location.";
     }
 
+    private bool LocationExists(string locationName)
+    {
+        return Locations.ContainsKey(locationName);
+    }
+
     public string GetLocationDetails(string locationName)
     {
-        if (!Locations.ContainsKey(locationName)) 
+        if (!LocationExists(locationName)) 
             return "Unknown location.";
 
         Location location = Locations[locationName];
